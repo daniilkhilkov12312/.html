@@ -65,3 +65,22 @@ function makeSnow() {
     widget.appendChild(s);
   }
 }
+const now = new Date();
+const hour = now.getHours(); // 0-23
+
+// Если ночь (например 19:00 - 6:00)
+if (hour >= 19 || hour < 6) {
+  widget.classList.add("night");
+  createStars(50); // создаём 50 звёзд
+}
+
+function createStars(count) {
+  for (let i = 0; i < count; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.left = Math.random() * 100 + "%";
+    star.style.top = Math.random() * 100 + "%";
+    star.style.animationDuration = (1 + Math.random() * 2) + "s"; // разное мерцание
+    widget.appendChild(star);
+  }
+}
