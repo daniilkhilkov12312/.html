@@ -32,7 +32,7 @@ body{
 #temp{animation:float 2s ease-in-out infinite;}
 
 /* Солнце */
-.sun {
+ {.sun
   width:120px;           /* увеличил размер */
   height:120px;
   background:yellow;
@@ -44,8 +44,6 @@ body{
   display:none;
   animation:rotateSun 20s linear infinite;
   z-index:0;             /* чтобы было за текстом */
-}
-
 @keyframes rotateSun{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
 /* Облака */
