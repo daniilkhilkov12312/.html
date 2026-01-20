@@ -1,71 +1,54 @@
-/* Основной фон и шрифты */
+/* Общий фон и центр */
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;
-  color: white;
-  text-align: center;
   height: 100vh;
-  overflow: hidden;
-  transition: background 1s ease;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: Arial, sans-serif;
+  background: #0c1220;
+  color: white;
+  transition: background 1s ease;
 }
 
 /* Виджет */
 .weather-widget {
-  position: relative;
-  z-index: 1;
-  background: rgba(0,0,0,0.3);
-  padding: 30px 50px;
-  border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  text-align: center;
+  background: rgba(0,0,0,0.5);
+  padding: 30px 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
-/* Заголовок города */
 .weather-widget h1 {
-  font-size: 2em;
+  font-size: 28px;
   margin-bottom: 10px;
 }
 
-/* Температура */
-.temperature {
-  font-size: 3em;
+.info div {
+  margin: 5px 0;
+}
+
+#temp {
+  font-size: 60px;
   font-weight: bold;
-  margin-bottom: 10px;
 }
 
-/* Описание погоды */
-.description {
-  font-size: 1.5em;
-  margin-bottom: 15px;
+#desc {
+  font-size: 20px;
 }
 
-/* Время */
-.time {
-  font-size: 1.2em;
+#time {
+  font-size: 18px;
 }
 
-/* Canvas для анимаций */
+/* Canvas анимации будет под контейнером */
 #weather-canvas {
+  pointer-events: none;
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
   z-index: 0;
-}
-
-/* Анимация солнца (пример) */
-.sun {
-  position: absolute;
-  top: 20%;
-  left: 80%;
-  width: 100px;
-  height: 100px;
-  background: yellow;
-  border-radius: 50%;
-  box-shadow: 0 0 50px yellow;
 }
