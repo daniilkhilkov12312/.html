@@ -9,17 +9,20 @@
 <div id="widget">
   <div class="city">Нэводари</div>
   <div id="temp">--°C</div>
-  <div id="desc">Загрузка...</div>
+  <div id="desc">Загрузка погоды...</div>
+  <div class="coords">Координаты: 44.3167°N, 28.6°E</div>
   <div class="source">
     Источник: <a href="https://open-meteo.com/" target="_blank">Open-Meteo</a>
   </div>
 </div>
 
 <script>
+// координаты Нэводари
 const lat = 44.3167;
 const lon = 28.6;
 
-fetch("https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current_weather=true")
+// запрос температуры
+fetch(https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true)
   .then(response => response.json())
   .then(data => {
     const temp = Math.round(data.current_weather.temperature);
