@@ -108,3 +108,17 @@ updateTime();
 setInterval(updateTime,1000);
 updateWeather();
 setInterval(updateWeather,5*60*1000);
+function fetchWeather() {
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=44.3167&longitude=28.6&current_weather=true&temperature_unit=celsius')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('temp').innerText = data.current_weather.temperature + '°C';
+    });
+}
+
+// первый раз при загрузке
+fetchWeather();
+
+// обновляем каждые 10 минут
+setInterval(fetchWeather, 10 * 60 * 1000);
+
