@@ -3,13 +3,13 @@ const descEl = document.getElementById("desc");
 const timeEl = document.getElementById("time");
 const body = document.body;
 
-// Удалить предыдущие анимации
+// Очистка анимаций
 function clearCanvas(){
   const c = document.getElementById("weather-canvas");
   if (c) c.remove();
 }
 
-// Создать canvas для анимации
+// Создать canvas
 function makeCanvas(){
   const cv = document.createElement("canvas");
   cv.id = "weather-canvas";
@@ -70,18 +70,17 @@ function snowAnim(){
   draw();
 }
 
-// Обновление времени
+// Время
 function updateTime(){
   const now = new Date();
   const hh = String(now.getHours()).padStart(2,"0");
   const mm = String(now.getMinutes()).padStart(2,"0");
   timeEl.innerText = `${hh}:${mm}`;
 }
-
 setInterval(updateTime,1000);
 updateTime();
 
-// Запрос погоды wttr.in JSON
+// Погода с wttr.in
 function updateWeather(){
   fetch("https://wttr.in/Nevodari?format=j1")
     .then(r=>r.json())
@@ -97,29 +96,40 @@ function updateWeather(){
 
       clearCanvas();
 
-      // фон и анимация
+      // Фон + подсветка экрана
       if(iconDesc.includes("sun") || iconDesc.includes("ясно")){
         body.style.background = "linear-gradient(to top, #4facfe, #00f2fe)";
-      }
-      else if(iconDesc.includes("cloud") || iconDesc.includes("облачно")){
+        setGlow("#fff700"); // желтая подсветка
+      } else if(iconDesc.includes("cloud") || iconDesc.includes("облачно")){
         body.style.background = "linear-gradient(to top, #bdc3c7, #2c3e50)";
-      }
-      else if(iconDesc.includes("rain") || iconDesc.includes("дождь")){
+        setGlow("#b0c4de"); // голубая подсветка
+      } else if(iconDesc.includes("rain") || iconDesc.includes("дождь")){
         body.style.background = "linear-gradient(to top, #4e5d6c, #1c1c1c)";
+        setGlow("#87cefa"); // светлая подсветка
         rainAnim();
-      }
-      else if(iconDesc.includes("snow") || iconDesc.includes("снег")){
+      } else if(iconDesc.includes("snow") || iconDesc.includes("снег")){
         body.style.background = "linear-gradient(to top, #a8c0ff, #3f2b96)";
+        setGlow("#ffffff"); // белая подсветка
         snowAnim();
-      }
-      else {
+      } else if(iconDesc.includes("storm") || iconDesc.includes("гроза")){
+        body.style.background = "linear-gradient(to top, #2c3e50, #000000)";
+        setGlow("#ffcc00"); // желто-оранжевая подсветка
+        rainAnim();
+      } else {
         body.style.background = "linear-gradient(to top, #bdc3c7, #2c3e50)";
+        setGlow("#ffffff");
       }
     })
-    .catch(e=>{
-      console.log("Ошибка погоды:", e);
-    });
+    .catch(e=>console.log("Ошибка погоды:", e));
+}
+
+// Подсветка текста
+function setGlow(color){
+  const elems = document.querySelectorAll(".temperature, .description, .time, h1");
+  elems.forEach(el=>{
+    el.style.textShadow = `0 0 15px ${color}, 0 0 30px ${color}`;
+  });
 }
 
 updateWeather();
-setInterval(updateWeather,5*60*1000); // обновлять каждые 5 минут
+setInterval(updateWeather,5*60*1000);
