@@ -98,6 +98,11 @@ function makeSnow(){
     widget.appendChild(s);
   }
 }
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log('Service Worker зарегистрирован'))
+    .catch(err => console.log('Service Worker ошибка:', err));
+}
 
 updateTime();
 setInterval(updateTime,1000);
