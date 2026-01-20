@@ -1,16 +1,16 @@
-// Элементы на странице
 const tempEl = document.getElementById('temp');
 const descEl = document.getElementById('desc');
+const timeEl = document.getElementById('time');
 const body = document.body;
 
 // Очистка анимаций
 function clearAnimations() {
-  body.className = ''; // убираем все классы
+  body.className = '';
   const oldCanvas = document.getElementById('weather-canvas');
   if (oldCanvas) oldCanvas.remove();
 }
 
-// Создание canvas для анимаций
+// Canvas для дождя и снега
 function createCanvas() {
   const canvas = document.createElement('canvas');
   canvas.id = 'weather-canvas';
@@ -25,23 +25,16 @@ function createCanvas() {
   return canvas;
 }
 
-// ===================== Анимация дождя =====================
+// Анимация дождя
 function createRain() {
   const canvas = createCanvas();
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-
   const drops = [];
   for (let i=0;i<200;i++){
-    drops.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
-      length: Math.random()*20+10,
-      speed: Math.random()*5+4
-    });
+    drops.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, length: Math.random()*20+10, speed: Math.random()*5+4});
   }
-
   function draw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.strokeStyle = 'rgba(174,194,224,0.5)';
@@ -61,23 +54,16 @@ function createRain() {
   draw();
 }
 
-// ===================== Анимация снега =====================
+// Анимация снега
 function createSnow() {
   const canvas = createCanvas();
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-
   const flakes = [];
   for (let i=0;i<200;i++){
-    flakes.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
-      r: Math.random()*4+1,
-      speed: Math.random()*1+0.5
-    });
+    flakes.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*4+1, speed: Math.random()*1+0.5});
   }
-
   function draw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.fillStyle = 'white';
@@ -88,21 +74,28 @@ function createSnow() {
       ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true);
     }
     ctx.fill();
-
     for (let i=0;i<flakes.length;i++){
       const f = flakes[i];
       f.y += f.speed;
       if(f.y>canvas.height) f.y = -5;
     }
-
     requestAnimationFrame(draw);
   }
   draw();
 }
 
-// ===================== Основная функция =====================
+// Обновление времени
+function updateTime() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2,'0');
+  const minutes = String(now.getMinutes()).padStart(2,'0');
+  timeEl.innerText = `${hours}:${minutes}`;
+}
+setInterval(updateTime, 1000);
+updateTime();
+
+// Обновление погоды
 function updateWeather() {
-  // wttr.in JSON для Нэводари
   fetch('https://wttr.in/Nevodari?format=j1')
     .then(res => res.json())
     .then(data => {
@@ -114,9 +107,8 @@ function updateWeather() {
 
       clearAnimations();
 
-      // Фон и анимации в зависимости от описания
       if (weatherDesc.includes('sun') || weatherDesc.includes('ясно')) {
-        body.style.background = 'linear-gradient(to top, #4facfe, #00f2fe)'; // голубой фон
+        body.style.background = 'linear-gradient(to top, #4facfe, #00f2fe)';
       } else if (weatherDesc.includes('cloud') || weatherDesc.includes('облачно')) {
         body.style.background = 'linear-gradient(to top, #bdc3c7, #2c3e50)';
       } else if (weatherDesc.includes('rain') || weatherDesc.includes('дождь')) {
@@ -128,7 +120,6 @@ function updateWeather() {
       } else if (weatherDesc.includes('storm') || weatherDesc.includes('гроза')) {
         body.style.background = 'linear-gradient(to top, #2c3e50, #000000)';
         createRain();
-        // молнии можно добавить позже
       } else {
         body.style.background = 'linear-gradient(to top, #bdc3c7, #2c3e50)';
       }
@@ -136,6 +127,6 @@ function updateWeather() {
     .catch(err => console.log('Ошибка при запросе погоды:', err));
 }
 
-// ===================== Запуск =====================
-updateWeather(); // сразу при загрузке
-setInterval(updateWeather, 5*60*1000); // обновление каждые 5 минут
+// Запуск
+updateWeather();
+setInterval(updateWeather, 5*60*1000);
