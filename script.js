@@ -3,10 +3,6 @@ const tempEl = document.getElementById('temp');
 const descEl = document.getElementById('desc');
 const body = document.body;
 
-// Координаты Нэводари
-const latitude = 44.3167;
-const longitude = 28.6;
-
 // Очистка анимаций
 function clearAnimations() {
   body.className = ''; // убираем все классы
@@ -27,61 +23,6 @@ function createCanvas() {
   canvas.style.zIndex = '0';
   body.appendChild(canvas);
   return canvas;
-}
-
-// Основная функция обновления погоды
-function updateWeather() {
-  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&temperature_unit=celsius`)
-    .then(res => res.json())
-    .then(data => {
-      if (!data.current_weather) return;
-
-      const temp = data.current_weather.temperature;
-      const code = data.current_weather.weathercode;
-
-      tempEl.innerText = temp + '°C';
-
-      let desc = '';
-      clearAnimations();
-
-      // Ясно
-      if ([0,1,2,3].includes(code)) {
-        desc = 'Ясно';
-        body.style.background = 'linear-gradient(to top, #4facfe, #00f2fe)'; // голубой фон
-        // Можно добавить солнце через CSS
-      }
-      // Облачно
-      else if ([45,48,3].includes(code)) {
-        desc = 'Облачно';
-        body.style.background = 'linear-gradient(to top, #bdc3c7, #2c3e50)';
-      }
-      // Дождь
-      else if ([51,53,55,61,63,65,56,57].includes(code)) {
-        desc = 'Дождь';
-        body.style.background = 'linear-gradient(to top, #4e5d6c, #1c1c1c)';
-        createRain();
-      }
-      // Снег
-      else if ([71,73,75,77].includes(code)) {
-        desc = 'Снег';
-        body.style.background = 'linear-gradient(to top, #a8c0ff, #3f2b96)';
-        createSnow();
-      }
-      // Гроза
-      else if ([95,96,99].includes(code)) {
-        desc = 'Гроза';
-        body.style.background = 'linear-gradient(to top, #2c3e50, #000000)';
-        createRain();
-        // Можно добавить молнии позже
-      }
-      else {
-        desc = 'Облачно';
-        body.style.background = 'linear-gradient(to top, #bdc3c7, #2c3e50)';
-      }
-
-      descEl.innerText = desc;
-    })
-    .catch(err => console.log('Ошибка при запросе погоды:', err));
 }
 
 // ===================== Анимация дождя =====================
@@ -159,6 +100,42 @@ function createSnow() {
   draw();
 }
 
+// ===================== Основная функция =====================
+function updateWeather() {
+  // wttr.in JSON для Нэводари
+  fetch('https://wttr.in/Nevodari?format=j1')
+    .then(res => res.json())
+    .then(data => {
+      const temp = data.current_condition[0].temp_C;
+      const weatherDesc = data.current_condition[0].weatherDesc[0].value.toLowerCase();
+
+      tempEl.innerText = temp + '°C';
+      descEl.innerText = data.current_condition[0].weatherDesc[0].value;
+
+      clearAnimations();
+
+      // Фон и анимации в зависимости от описания
+      if (weatherDesc.includes('sun') || weatherDesc.includes('ясно')) {
+        body.style.background = 'linear-gradient(to top, #4facfe, #00f2fe)'; // голубой фон
+      } else if (weatherDesc.includes('cloud') || weatherDesc.includes('облачно')) {
+        body.style.background = 'linear-gradient(to top, #bdc3c7, #2c3e50)';
+      } else if (weatherDesc.includes('rain') || weatherDesc.includes('дождь')) {
+        body.style.background = 'linear-gradient(to top, #4e5d6c, #1c1c1c)';
+        createRain();
+      } else if (weatherDesc.includes('snow') || weatherDesc.includes('снег')) {
+        body.style.background = 'linear-gradient(to top, #a8c0ff, #3f2b96)';
+        createSnow();
+      } else if (weatherDesc.includes('storm') || weatherDesc.includes('гроза')) {
+        body.style.background = 'linear-gradient(to top, #2c3e50, #000000)';
+        createRain();
+        // молнии можно добавить позже
+      } else {
+        body.style.background = 'linear-gradient(to top, #bdc3c7, #2c3e50)';
+      }
+    })
+    .catch(err => console.log('Ошибка при запросе погоды:', err));
+}
+
 // ===================== Запуск =====================
 updateWeather(); // сразу при загрузке
-setInterval(updateWeather, 5*60*1000); // каждые 5 минут
+setInterval(updateWeather, 5*60*1000); // обновление каждые 5 минут
