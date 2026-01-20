@@ -6,14 +6,16 @@
 </head>
 <body>
 
-<div id="widget">
+<div id="widget" class="widget clear">
   <div class="city">Нэводари</div>
-  <div id="temp">--°C</div>
-  <div id="desc">Загрузка погоды...</div>
-  <div class="coords">Координаты: 44.3167°N, 28.6°E</div>
-  <div class="source">
-    Источник: <a href="https://open-meteo.com/" target="_blank">Open-Meteo</a>
-  </div>
+  <div id="temp" class="temp">--°C</div>
+  <div id="desc" class="desc">Загрузка...</div>
+  <div id="time" class="time">--:--:--</div>
+  
+  <!-- Декорации для анимаций -->
+  <div id="sun" class="sun"></div>
+  <div id="clouds" class="clouds"></div>
+  <div id="lightning" class="lightning"></div>
 </div>
 
 <script>
