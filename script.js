@@ -84,29 +84,50 @@ let starsRunning = false;
 updateBackground();
 setInterval(updateBackground, 60 * 1000);
 
-// 🌦 ПОГОДА (НЕВОДАРИ)
-function updateWeather() {
-  fetch("https://api.open-meteo.com/v1/forecast?latitude=44.3167&longitude=28.6&current_weather=true&temperature_unit=celsius")
-    .then(r => r.json())
-    .then(data => {
-      const w = data.current_weather;
-      tempEl.textContent = `${Math.round(w.temperature)}°C`;
+let rainDrops = [];
 
-      const code = w.weathercode;
-      let text = "Облачно";
-
-      if (code === 0) text = "Ясно";
-      else if (code < 3) text = "Малооблачно";
-      else if (code < 60) text = "Дождь";
-      else if (code < 80) text = "Снег";
-      else text = "Гроза";
-
-      descEl.textContent = text;
-    })
-    .catch(() => {
-      descEl.textContent = "Ошибка погоды";
+function createRain() {
+  rainDrops = [];
+  for(let i=0;i<100;i++){
+    rainDrops.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      l: Math.random()*20+10,
+      speed: Math.random()*4+4
     });
+  }
 }
 
-updateWeather();
-setInterval(updateWeather, 5 * 60 * 1000);
+function drawRain(){
+  if(currentWeather !== "Дождь") return; // рисуем только при дожде
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s=>{
+    const alpha = 0.3 + 0.7 * Math.sin(Date.now() / 1200 + s.phase);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.strokeStyle = "rgba(174,194,224,0.5)";
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
+  rainDrops.forEach(r=>{
+    ctx.beginPath();
+    ctx.moveTo(r.x,r.y);
+    ctx.lineTo(r.x,r.y+r.l);
+    ctx.stroke();
+    r.y += r.speed;
+    if(r.y>canvas.height) r.y = -20;
+  });
+  if(text === "Дождь") {
+  document.body.style.background = "linear-gradient(to top,#6e7f80,#a0a0a0)";
+  createRain();
+  drawRain();
+  currentWeather = "Дождь";
+    let currentWeather = "";
+
+}
+
+  requestAnimationFrame(drawRain);
+}
