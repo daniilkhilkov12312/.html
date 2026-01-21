@@ -1,53 +1,60 @@
+/* Основной фон и шрифты */
 body {
   margin: 0;
   padding: 0;
   height: 100vh;
   font-family: Arial, sans-serif;
-  color: white;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
   transition: background 1s ease;
-  background: linear-gradient(to top, #0c1220, #1a1a40);
+  color: white;
 }
 
+/* Контейнер для погоды */
 .weather-info {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* расстояние между градусами, описанием и временем */
   z-index: 1;
+  text-align: center;
 }
 
+/* Заголовок города */
 .weather-info h1 {
   font-size: 2em;
-  margin-bottom: 10px;
+  margin: 0;
   text-shadow: 0 0 15px #00f2fe;
 }
 
+/* Температура */
 #temp {
   font-size: 4em;
   font-weight: bold;
-  margin-bottom: 10px;
   text-shadow: 0 0 20px #4facfe;
 }
 
+/* Описание погоды */
 #desc {
   font-size: 1.5em;
-  margin-bottom: 15px;
   text-shadow: 0 0 15px #00f2fe;
 }
 
+/* Время */
 #time {
   font-size: 1.2em;
   text-shadow: 0 0 15px #00f2fe;
 }
 
+/* Canvas для анимаций (звезды, дождь, снег) */
 #weather-canvas {
   pointer-events: none;
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   z-index: 0;
 }
-
