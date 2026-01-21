@@ -40,6 +40,34 @@ function drawStars(){
 }
 
 // Вызов
+function updateBackgroundByTime() {
+  const hour = new Date().getHours();
+
+  if (hour >= 19 || hour < 6) {
+    // НОЧЬ
+    document.body.style.background =
+      "linear-gradient(to top, #020111, #0b1d3a)";
+    startStars(); // звезды
+  } 
+  else if (hour >= 6 && hour < 12) {
+    // УТРО
+    document.body.style.background =
+      "linear-gradient(to top, #fbc2eb, #a6c1ee)";
+  } 
+  else if (hour >= 12 && hour < 15) {
+    // ДЕНЬ
+    document.body.style.background =
+      "linear-gradient(to top, #4facfe, #00f2fe)";
+  } 
+  else {
+    // ВЕЧЕР
+    document.body.style.background =
+      "linear-gradient(to top, #fa709a, #fee140)";
+  }
+}
+
 drawStars();
 
 // При обновлении страницы звезды создаются заново, меняя своё положение
+updateBackgroundByTime();
+setInterval(updateBackgroundByTime, 60 * 1000);
